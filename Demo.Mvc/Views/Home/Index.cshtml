@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Book List";
+}
+
+@using Demo.Entity.Concrete
+@model List<Book>
+
+<div class="text-center">
+    <div class="container">
+        <div class="row gap-3">
+        @foreach (var item in Model)
+            {
+                if (item.isRented == false)
+                {
+                    <div class="card">
+                        <img class="card-img-top" src="@item.BookImage" alt="Card image cap">
+                        <div class="card-body">
+                            <h1 id="cardId" style="display:none">@item.Id</h1>
+                            <h5 class="card-title">@item.BookName</h5>
+                            <p class="card-text">@item.Author</p>
+                            <button type="button" class="modelButtonOpen btn btn-primary">Ödünç Al</button>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card">
+                        <img class="card-img-top" src="@item.BookImage" alt="Card image cap">
+                        <div class="card-body">
+                            <h1 id="cardId" style="display:none">@item.Id</h1>
+                            <h5 class="card-title">@item.BookName</h5>
+                            <p class="card-text">@item.Author</p>
+                            <p class="card-text">@item.RentedName</p>
+                            <p class="card-text">@item.RentedDate</p>
+                        </div>
+                    </div>
+                }
+                
+         }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ödünç Al</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" class="gap-3">
+                    <p style="display:none;" id="modalBookId" name="id"></p>
+                    <div class="form-group">
+                        <label for="name">Ödünç Alan Kişinin Adı</label>
+                        <input type="text" class="form-control mt-2" id="name" name="name" placeholder="Ödünç alan kişi adı giriniz.">
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Tarih Giriniz</label>
+                        <input class="form-control mt-2" type="date" name="date" id="my_date_picker">
+                    </div>
+                    
+                   
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button id="saveRentDetail" type="button" class="btn btn-primary">Kaydet</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+       
+    });
+</script>
+
+
+<script type="text/javascript">
+    $("#saveRentDetail").click(function () {
+        debugger
+        var id = $("#modalBookId").text();
+        var date = $("#my_date_picker").val();
+
+        var dateObj = new Date(date);
+
+        
+        var day = dateObj.getDate();
+        var month = dateObj.getMonth() + 1; 
+        var year = dateObj.getFullYear();
+
+        var dateTime=day+"-"+month+"-"+year;
+
+        var name = $("#name").val();
+        $.ajax({
+            type: "POST",
+            url: '/Home/UpdateUser?id=' + id + '&name=' + name + '&dateTime=' + date,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                    alert(data)
+                window.location.href = "/";
+ 
+                },
+            error: function (data) {
+                   alert("Bir hata ile karşılaşılmıştır.")
+            }
+
+        });
+    });
+
+
+    $(".modelButtonOpen").click(function () {
+        debugger
+        var id = Number($(this)[0].parentElement.children[0].textContent);
+        $("#modalBookId").text(id)
+        $("#exampleModal").modal('show');
+    });
+</script>
