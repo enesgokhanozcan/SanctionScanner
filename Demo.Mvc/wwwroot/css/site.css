@@ -21,8 +21,15 @@ body {
     width:18rem;
 }
 
+.addcard {
+    width: 42rem;
+}
+
 @media (max-width: 768px) {
     .card {
         width: 26rem;
+    }
+    .addcard {
+        width: 24rem;
     }
 }
