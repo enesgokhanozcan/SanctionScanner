@@ -87,16 +87,6 @@
         debugger
         var id = $("#modalBookId").text();
         var date = $("#my_date_picker").val();
-
-        var dateObj = new Date(date);
-
-        
-        var day = dateObj.getDate();
-        var month = dateObj.getMonth() + 1; 
-        var year = dateObj.getFullYear();
-
-        var dateTime=day+"-"+month+"-"+year;
-
         var name = $("#name").val();
         $.ajax({
             type: "POST",
